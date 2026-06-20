@@ -6,3 +6,22 @@ private:
     string name;
     int accountNumber;
     double balance;
+void createAccount() {
+        cin.ignore();
+
+        cout << "Enter customer name: ";
+        getline(cin, name);
+
+        cout << "Enter account number: ";
+        cin >> accountNumber;
+
+        cout << "Enter initial balance: ";
+        cin >> balance;
+    }
+
+    void display() {
+        cout << "\nCustomer Name: " << name << endl;
+        cout << "Account Number: " << accountNumber << endl;
+        cout << "Balance: " << balance << endl;
+    }
+};
