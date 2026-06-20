@@ -1,27 +1,25 @@
 #include <iostream>
+#include <fstream>
+#include <string>
 using namespace std;
 
-class BankAccount {
-private:
+class Customer {
+public:
     string name;
+    int customerId;
+};
+
+class Transaction {
+public:
     int accountNumber;
-    double balance;
-void createAccount() {
-        cin.ignore();
+    string type;
+    double amount;
 
-        cout << "Enter customer name: ";
-        getline(cin, name);
-
-        cout << "Enter account number: ";
-        cin >> accountNumber;
-
-        cout << "Enter initial balance: ";
-        cin >> balance;
-    }
-
-    void display() {
-        cout << "\nCustomer Name: " << name << endl;
-        cout << "Account Number: " << accountNumber << endl;
-        cout << "Balance: " << balance << endl;
+    void saveTransaction() {
+        ofstream file("transactions.txt", ios::app);
+        file << accountNumber << endl;
+        file << type << endl;
+        file << amount << endl;
+        file.close();
     }
 };
