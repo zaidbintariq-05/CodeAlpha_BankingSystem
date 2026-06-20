@@ -23,3 +23,62 @@ public:
         file.close();
     }
 };
+class Account {
+public:
+    Customer customer;
+    int accountNumber;
+    double balance;
+
+    void createAccount() {
+        cin.ignore();
+
+        cout << "Enter Customer Name: ";
+        getline(cin, customer.name);
+
+        cout << "Enter Customer ID: ";
+        cin >> customer.customerId;
+
+        cout << "Enter Account Number: ";
+        cin >> accountNumber;
+
+        cout << "Enter Initial Balance: ";
+        cin >> balance;
+    }
+
+    void displayAccount() {
+        cout << "\n----- Account Information -----\n";
+        cout << "Customer Name: " << customer.name << endl;
+        cout << "Customer ID: " << customer.customerId << endl;
+        cout << "Account Number: " << accountNumber << endl;
+        cout << "Balance: " << balance << endl;
+    }
+};
+void saveAccount(Account acc) 
+{
+    ofstream file("accounts.txt", ios::app);
+    file << acc.customer.name << endl;
+    file << acc.customer.customerId << endl;
+    file << acc.accountNumber << endl;
+    file << acc.balance << endl;
+
+    file.close();
+}
+bool accountExists(int accNo) {
+    ifstream file("accounts.txt");
+    Account acc;
+
+    while (getline(file, acc.customer.name)) {
+        file >> acc.customer.customerId;
+        file >> acc.accountNumber;
+        file >> acc.balance;
+        file.ignore();
+
+        if (acc.accountNumber == accNo) {
+            file.close();
+            return true;
+        }
+    }
+
+    file.close();
+    return false;
+}
