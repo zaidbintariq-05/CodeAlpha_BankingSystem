@@ -228,3 +228,105 @@ void withdrawMoney()
         cout << "Account not found!\n";
     }
 }
+void transferMoney() {
+    int fromAcc, toAcc;
+    double amount;
+
+    cout << "Enter Sender Account Number: ";
+    cin >> fromAcc;
+
+    cout << "Enter Receiver Account Number: ";
+    cin >> toAcc;
+
+    cout << "Enter Amount to Transfer: ";
+    cin >> amount;
+
+    ifstream file("accounts.txt");
+    ofstream temp("temp.txt");
+
+    Account acc;
+    bool senderFound = false;
+    bool receiverFound = false;
+    bool transferAllowed = false;
+
+    while (getline(file, acc.customer.name)) {
+        file >> acc.customer.customerId;
+        file >> acc.accountNumber;
+        file >> acc.balance;
+        file.ignore();
+
+        if (acc.accountNumber == fromAcc) {
+            senderFound = true;
+
+            if (amount > 0 && amount <= acc.balance) {
+                acc.balance -= amount;
+                transferAllowed = true;
+            }
+        }
+
+        temp << acc.customer.name << endl;
+        temp << acc.customer.customerId << endl;
+        temp << acc.accountNumber << endl;
+        temp << acc.balance << endl;
+    }
+
+    file.close();
+    temp.close();
+
+    remove("accounts.txt");
+    rename("temp.txt", "accounts.txt");
+
+    if (!senderFound) {
+        cout << "Sender account not found!\n";
+        return;
+    }
+
+    if (!transferAllowed) {
+        cout << "Insufficient balance or invalid amount!\n";
+        return;
+    }
+
+    ifstream file2("accounts.txt");
+    ofstream temp2("temp.txt");
+
+    while (getline(file2, acc.customer.name)) {
+        file2 >> acc.customer.customerId;
+        file2 >> acc.accountNumber;
+        file2 >> acc.balance;
+        file2.ignore();
+
+        if (acc.accountNumber == toAcc) {
+            acc.balance += amount;
+            receiverFound = true;
+        }
+
+        temp2 << acc.customer.name << endl;
+        temp2 << acc.customer.customerId << endl;
+        temp2 << acc.accountNumber << endl;
+        temp2 << acc.balance << endl;
+    }
+
+    file2.close();
+    temp2.close();
+
+    remove("accounts.txt");
+    rename("temp.txt", "accounts.txt");
+
+    if (receiverFound) {
+        Transaction t1;
+        t1.accountNumber = fromAcc;
+        t1.type = "Transfer Sent";
+        t1.amount = amount;
+        t1.saveTransaction();
+
+        Transaction t2;
+        t2.accountNumber = toAcc;
+        t2.type = "Transfer Received";
+        t2.amount = amount;
+        t2.saveTransaction();
+
+        cout << "Transfer successful!\n";
+    } else {
+        cout << "Receiver account not found!\n";
+    }
+}
