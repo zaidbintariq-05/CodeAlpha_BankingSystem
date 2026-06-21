@@ -82,3 +82,93 @@ bool accountExists(int accNo) {
     file.close();
     return false;
 }
+void createNewAccount() {
+    Account acc;
+    acc.createAccount();
+
+    if (accountExists(acc.accountNumber)) {
+        cout << "Account number already exists!\n";
+    } else {
+        saveAccount(acc);
+        cout << "Account created successfully!\n";
+    }
+}
+void displayAllAccounts() {
+    ifstream file("accounts.txt");
+    Account acc;
+
+    if (!file) {
+        cout << "No accounts found!\n";
+        return;
+    }
+
+    while (getline(file, acc.customer.name)) {
+        file >> acc.customer.customerId;
+        file >> acc.accountNumber;
+        file >> acc.balance;
+        file.ignore();
+
+        acc.displayAccount();
+    }
+
+    file.close();
+}
+void depositMoney() {
+    ifstream file("accounts.txt");
+    ofstream temp("temp.txt");
+
+    Account acc;
+    int accNo;
+    double amount;
+    bool found = false;
+
+    cout << "Enter Account Number: ";
+    cin >> accNo;
+
+    while (getline(file, acc.customer.name)) {
+        file >> acc.customer.customerId;
+        file >> acc.accountNumber;
+        file >> acc.balance;
+        file.ignore();
+
+        if (acc.accountNumber == accNo) 
+            {
+            cout << "Enter Amount to Deposit: ";
+            cin >> amount;
+
+            if (amount > 0) 
+             {
+                acc.balance += amount;
+                found = true;
+
+                Transaction t;
+                t.accountNumber = accNo;
+                t.type = "Deposit";
+                t.amount = amount;
+                t.saveTransaction();
+
+                cout << "Deposit successful!\n";
+            }
+             else 
+            {
+                cout << "Invalid amount!\n";
+            }
+        }
+
+        temp << acc.customer.name << endl;
+        temp << acc.customer.customerId << endl;
+        temp << acc.accountNumber << endl;
+        temp << acc.balance << endl;
+    }
+
+    file.close();
+    temp.close();
+
+    remove("accounts.txt");
+    rename("temp.txt", "accounts.txt");
+
+    if (!found) 
+    {
+        cout << "Account not found!\n";
+    }
+}
