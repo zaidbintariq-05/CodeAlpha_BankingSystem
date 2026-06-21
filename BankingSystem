@@ -330,3 +330,93 @@ void transferMoney() {
         cout << "Receiver account not found!\n";
     }
 }
+void viewTransactions() {
+    ifstream file("transactions.txt");
+
+    int searchAccNo;
+    int accNo;
+    string type;
+    double amount;
+    bool found = false;
+
+    cout << "Enter Account Number: ";
+    cin >> searchAccNo;
+
+    cout << "\n Transaction History \n";
+
+    while (file >> accNo) 
+	{
+        file.ignore();
+        getline(file, type);
+        file >> amount;
+        file.ignore();
+
+        if (accNo == searchAccNo) 
+          {
+            cout << "Type: " << type << " | Amount: " << amount << endl;
+            found = true;
+        }
+    }
+
+    file.close();
+
+    if (!found) 
+    {
+        cout << "No transactions found for this account.\n";
+    }
+}
+
+int main() 
+    {
+    int choice;
+
+    do {
+        cout << "\n Banking System \n";
+        cout << "1. Create Account\n";
+        cout << "2. Display All Accounts\n";
+        cout << "3. Deposit Money\n";
+        cout << "4. Withdraw Money\n";
+        cout << "5. Transfer Money\n";
+        cout << "6. View Transaction History\n";
+        cout << "7. Exit\n";
+        cout << "Enter Choice: ";
+        cin >> choice;
+
+        switch (choice) 
+        {
+        case 1:
+            createNewAccount();
+            break;
+
+        case 2:
+            displayAllAccounts();
+            break;
+
+        case 3:
+            depositMoney();
+            break;
+
+        case 4:
+            withdrawMoney();
+            break;
+
+        case 5:
+            transferMoney();
+            break;
+
+        case 6:
+            viewTransactions();
+            break;
+
+        case 7:
+            cout << "Thank you for using Banking System.\n";
+            break;
+
+        default:
+            cout << "Invalid choice!\n";
+        }
+
+    } 
+    while (choice != 7);
+    return 0;
+}
